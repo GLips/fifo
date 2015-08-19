@@ -1,6 +1,7 @@
 source 'https://rubygems.org'
 
 gem 'ember-cli-rails'
+gem 'bower-rails', '~> 0.10.0'
 
 #
 # Rails default gems
