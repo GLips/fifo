@@ -9,17 +9,31 @@ export default DS.Adapter.extend({
     return Math.random().toString(32).slice(2).substr(0, 5) + Math.random().toString(32).slice(2).substr(0, 5);
   },
   findRecord: function(store, type, id/*, snapshot*/) {
-    return JSON.parse(window.localStorage.getItem(id));
+    return new Ember.RSVP.Promise(function(resolve, reject) {
+      var data = JSON.parse(window.localStorage.getItem(id));
+      if(data) {
+        Ember.run(null, resolve, data);
+      } else {
+        Ember.run(null, reject);
+      }
+    });
   },
   createRecord: function(store, type, snapshot) {
-    var fullId = this.fullId(type, this.generateId());
+    var fullId = (snapshot.id) ? snapshot.id : this.fullId(type, this.generateId());
+    // TODO: Update serialize to save the IDs of hasMany/belongsTo relationships
     var data = this.serialize(snapshot, { includeId: true });
     data.id = fullId;
+    console.log(data);
     window.localStorage.setItem(fullId, JSON.stringify(data));
     return new Ember.RSVP.Promise(function(resolve) { Ember.run(null, resolve, data); });
   },
-  updateRecord: function() {
-    console.log("updateRecord");
+  updateRecord: function(store, type, snapshot) {
+    var fullId = (snapshot.id) ? snapshot.id : this.fullId(type, this.generateId());
+    var data = this.serialize(snapshot, { includeId: true });
+    data.id = fullId;
+    console.log(data);
+    window.localStorage.setItem(fullId, JSON.stringify(data));
+    return new Ember.RSVP.Promise(function(resolve) { Ember.run(null, resolve, data); });
   },
   deleteRecord: function() {
     console.log("deleteRecord");

@@ -1,6 +1,8 @@
+{{#each model.tasks as |task|}}
 <div class="task-main">
-  <span class="content">Make Ember data models for todo lists and tasks.
+  <span class="content">{{task.text}}
     <a class="finish-task">done</a>
     <a class="sleep-task">sleep</a>
   </span>
 </div>
+{{/each}}
