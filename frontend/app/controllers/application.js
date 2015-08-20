@@ -3,14 +3,14 @@ import Ember from 'ember';
 export default Ember.Controller.extend({
   actions: {
     newTask() {
-      var _this = this;
-      this.store.createRecord('task', {
-        text: ""
-      }).save().then(function(task) {
-        _this.store.find('list', 'default').then(function(list) {
+      this.store.find('list', 'default').then( (list)=> {
+        this.store.createRecord('task', {
+          text: "",
+          list: list
+        }).save().then(function(task) {
           list.get('tasks').addObject(task);
           list.save();
-        })
+        });
       });
     }
   }
